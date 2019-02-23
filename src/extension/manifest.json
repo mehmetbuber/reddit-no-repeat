@@ -1,10 +1,10 @@
 {
-  "name": "Content Script Injection",
+  "name": "Reddit No-Repeat",
   "version": "1.0",
-  "author": "Nick Volpe",
+  "author": "Mehmet Buber",
   "manifest_version": 2,
-  "description": "Inject some JS or CSS into a webpage.",
-  "homepage_url": "http://www.twitter.com/iamnickvolpe/",
+  "description": "Loads new threads from reddit until 5 links found and removes previously opened links.",
+  "homepage_url": "https://www.mehmetbuber.com/",
   "icons": {
     "16": "images/icon16.png",
     "48": "images/icon48.png",
