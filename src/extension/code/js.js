@@ -1,7 +1,6 @@
 var interval;
 var intervalState = false;
 var codes = [];
-var keys = [];
 var i = 0;
 var pageLocation = "";
 var ths;
@@ -56,6 +55,8 @@ document.onkeyup = function (e) {
                                                                 itemSubReddit: itemSubReddit
                                                             });
                                                             ths.parent().parent().remove();
+                                                        } else {
+                                                            //ignore
                                                         }
                                                     } else {
                                                         ths.parent().parent().remove();
@@ -63,11 +64,17 @@ document.onkeyup = function (e) {
                                                 } else {
                                                     ths.parent().parent().remove();
                                                 }
+                                            } else {
+                                                //ignore
                                             }
                                         } else {
                                             ths.parent().parent().remove();
                                         }
+                                    } else {
+                                        //ignore
                                     }
+                                } else {
+                                    //ignore
                                 }
                             });
                         });
