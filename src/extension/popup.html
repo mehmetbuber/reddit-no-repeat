@@ -1,0 +1,34 @@
+﻿<!doctype html>
+<html>
+<head>
+    <title>Save page for later</title>
+    <link rel="stylesheet" href="../../lib/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../lib/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../css/popup.css">
+    <link rel="icon" href="../img/icon-16.png">
+</head>
+<body>
+    <div class="popup">
+        <div id="popupLoader" class="loaderDiv">
+            <div class="loader"></div>
+        </div>
+        <p id="message"></p>
+        <a id="tabUrl" href=""></a>
+
+        <div id="auth" class="col-md-offset-2 col-md-8">
+            <button id="signUpPromt" class="btn btn-default col-md-offset-3 col-md-6 promt authInput"> Sign-Up</button>
+            <button id="loginPromt" class="btn btn-default col-md-offset-3 col-md-6 promt authInput"> Log-In</button>
+            <input class="col-md-offset-3 col-md-6 authInput" id="email" type="text" placeholder="Email" />
+            <input class="col-md-offset-3 col-md-6 authInput" id="password" type="password" placeholder="Password" />
+            <input class="col-md-offset-3 col-md-6 authInput" id="passwordRepeat" type="password" placeholder="Repeat Password" />
+            <button id="signUp" class="btn btn-default col-md-offset-3 col-md-6 authInput"> Sign-Up</button>
+            <button id="login" class="btn btn-default col-md-offset-3 col-md-6 authInput"> Log-In</button>
+            <p id="error" style="display:none">Error</p>
+        </div>
+    </div>
+
+    <script src="../../lib/js/jquery.min.js"></script>
+    <script src="../js/popup.js"></script>
+    <script src="https://apis.google.com/js/client.js?onload=init"></script>
+</body>
+</html>
