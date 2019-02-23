@@ -4,14 +4,39 @@ var hrefs = [];
 var codes = [];
 var visitedThreads = [];
 var linkCount = 5;
+var subReddit = "";
 
 document.onkeyup = function (e) {
-    var location = window.location.href;
-    if (location.indexOf("https://www.reddit.com/") !== -1 && location.indexOf("/comments/") === -1) {
-        if (e.ctrlKey && e.shiftKey && e.which === 32) {
-            getUrls(function (data) {
-                visitedThreads = data.visitedThreads;
 
+    chrome.storage.local.get(function (val) {
+        console.log(val);
+    });
+
+    var location = window.location.href;
+    subReddit = location.replace("https://www.reddit.com", "").replace("/r/", "").split("?")[0].split("/")[0];
+
+    if (!subReddit)
+        subReddit = "reddit";
+
+    if (subReddit.length === 0)
+        subReddit = "reddit";
+
+    if (e.ctrlKey && e.shiftKey && e.which === 32) {
+        if (location.indexOf("/comments/") === -1) {
+            getUrls(function (data) {
+                visitedThreads = data[subReddit];
+
+                if (subReddit === "reddit") {
+                    var keys = Object.keys(data);
+                    for (var i = 0; i < keys.length; i++) {
+                        if (keys[i] !== "linkCount") {
+                            if (Array.isArray(data[keys[i]])) {
+                                visitedThreads = visitedThreads.concat(data[keys[i]]);
+                            }
+                        }
+                    }
+                }
+                
                 if (!visitedThreads)
                     visitedThreads = [];
 
@@ -46,7 +71,7 @@ document.onkeyup = function (e) {
                                 }
                             });
                         });
-                        
+
                         if (hrefs.length > linkCount - 1)
                             finalize();
                         else {
@@ -57,22 +82,20 @@ document.onkeyup = function (e) {
                         $(window).scrollTop(120000);
                         intervalState = false;
                     }
-                }, 100);
-
+                }, 1000);
             });
         }
     }
 };
 
-function getId(hrf)
-{
+function getId(hrf) {
     var path = hrf.split("/");
     var id = path[4];
     return id;
 }
 
 function getUrls(callback) {
-    chrome.storage.local.get(["visitedThreads"], function (result) {
+    chrome.storage.local.get([subReddit], function (result) {
         callback(result);
     });
 }
@@ -80,15 +103,21 @@ function getUrls(callback) {
 function finalize() {
     clearInterval(interval);
     for (var i = 0; i < hrefs.length; i++) {
-        window.open("https://www.reddit.com" +hrefs[i], "_blank");
+        window.open("https://www.reddit.com" + hrefs[i], "_blank");
     }
 
     visitedThreads = visitedThreads.concat(codes);
-    hrefs = [];
-    codes = [];
 
-    chrome.storage.local.set({ visitedThreads: visitedThreads }, function () {
-        console.log(visitedThreads.length);
+    chrome.storage.local.get(subReddit, function (val) {
+        if (typeof val[subReddit] === 'undefined')
+            val[subReddit] = [];
+
+        val[subReddit] = val[subReddit].concat(codes);
+
+        chrome.storage.local.set(val);
+        
         visitedThreads = [];
+        hrefs = [];
+        codes = [];
     });
 }
