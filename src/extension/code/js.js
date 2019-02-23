@@ -25,10 +25,8 @@ document.onkeyup = function (e) {
 
             if (pageLocation.indexOf("/comments/") === -1) {
                 chrome.storage.local.get(function (result) {
-                    console.log(result);
                     if (!result["linkCount"])
                         result["linkCount"] = 5;
-                    console.log(result["linkCount"]);
 
                     interval = setInterval(function () {
                         $(window).scrollTop(0);
