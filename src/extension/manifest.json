@@ -23,7 +23,8 @@
     "default_popup": "code/popup.html"
   },
   "permissions": [
-    "storage"
+    "storage",
+    "unlimitedStorage"
   ],
   "web_accessible_resources": [ "resources/*" ]
 }

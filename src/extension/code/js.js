@@ -1,5 +1,4 @@
 var interval;
-var intervalState = false;
 var codes = [];
 var i = 0;
 var pageLocation = "";
@@ -10,18 +9,16 @@ var itemSubReddit = "";
 var working = false;
 
 document.onkeyup = function (e) {
+    pageLocation = window.location.href;
     if (!working) {
-
-        pageLocation = window.location.href;
-
         if (e.ctrlKey && e.shiftKey && e.which === 32) {
             working = true;
+
             $("body").prepend("<div id=\"reddit-no-repeat-loading\">" +
                 "<img class=\"reddit-loading\" src=\"http://mehmetbuber.com/loading.gif\">" +
                 "<p>Loading new threads, please wait...</p>" +
                 "</div>");
             
-
             if (pageLocation.indexOf("/comments/") === -1) {
                 chrome.storage.local.get(function (result) {
                     if (!result["linkCount"])
@@ -100,6 +97,7 @@ function getId(hrf) {
         return "";
     }
 }
+
 function getItemSubReddit(hrf) {
     try {
         return hrf.split("/")[2];

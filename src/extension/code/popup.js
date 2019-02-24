@@ -5,7 +5,24 @@
             window.close();
         });
     });
-})
+});
+
+
+$("#subRedditSearch").bind("keyup change", function (e) {
+    var query = $('#subRedditSearch').val().toLowerCase();
+    $('.subReddit').each(function () {
+        var subReddit = $(this).attr("data-subReddit").toLowerCase();
+        if (query.length > 0) {
+            if (subReddit.includes(query)) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        } else {
+            $(this).show();
+        }
+    });
+});
 
 $(document).ready(function () {
     chrome.storage.local.get(function (result) {
@@ -15,8 +32,23 @@ $(document).ready(function () {
 
         for (var i = 0; i < keys.length; i++) {
             if (keys[i] !== "linkCount") {
-                $('#threads').append("<a target=\"blank\" href=\"https://www.reddit.com/r/" + keys[i] + "/top/?t=all\" <p style=\"margin: 2px; display: inline-block\"><bold style=\"font-weight: 600\">" + keys[i] + "</bold>: " + result[keys[i]].length + ",</p></a>");
+                $('#threads').append('<div data-subReddit="' + keys[i] + '" class="subReddit">' +
+                    '<i class="fa fa-trash remove-button"></i>' +
+                    '<a target="blank" href="https://www.reddit.com/r/' + keys[i] + '/top/?t=all">' +
+                    '<span class="key-label">' + keys[i] + '</span>: ' + result[keys[i]].length + '' +
+                    '</a>' +
+                    '</div>');
             };
         }
     });
 })
+
+$(document).on('click', 'body .remove-button', function () {
+    var ths = $(this);
+    var subReddit = $(this).parent().attr("data-subReddit");
+    if (confirm('Are you sure?')) {
+        chrome.storage.local.remove(subReddit, function (result) {
+            ths.parent().remove();
+        });
+    }
+});
