@@ -1,92 +1,119 @@
 var interval;
+var ths;
 var codes = [];
 var i = 0;
 var pageLocation = "";
-var ths;
 var href = "";
 var id = "";
 var itemSubReddit = "";
+var hiddenThread = 0;
+var hiddenAds = 0;
 var working = false;
+var triggered = false;
 
 document.onkeyup = function (e) {
     pageLocation = window.location.href;
-    if (!working) {
-        if (e.ctrlKey && e.shiftKey && e.which === 32) {
-            working = true;
+    triggered = e.ctrlKey && e.shiftKey && e.which === 32;
 
-            $("body").prepend("<div id=\"reddit-no-repeat-loading\">" +
-                "<img class=\"reddit-loading\" src=\"http://mehmetbuber.com/loading.gif\">" +
-                "<p>Loading new threads, please wait...</p>" +
-                "</div>");
-            
-            if (pageLocation.indexOf("/comments/") === -1) {
-                chrome.storage.local.get(function (result) {
-                    if (!result["linkCount"])
-                        result["linkCount"] = 5;
+    if (pageLocation.indexOf("https://www.reddit.com/") !== -1) //Only on reddit
+        return;
 
-                    interval = setInterval(function () {
-                        $(window).scrollTop(0);
+    if (!triggered) //Ignore event if not triggered
+        return;
 
-                        $(".scrollerItem").each(function () {
-                            ths = $(this);
-                            $(this).find("a").each(function () {
-                                href = $(this).attr("href");
-                                id = getId(href);
-                                itemSubReddit = getItemSubReddit(href);
-                                if (itemSubReddit) {
-                                    if (href.indexOf("https://www.reddit.com/") === -1) {
-                                        if (href.indexOf("?instanceId=") === -1) {
-                                            if (href.indexOf("/comments/") !== -1) {
-                                                var hrefs = codes.map(a => a.href);
+    if (working) //Ignore trigger if working
+        return;
+    
+    if (pageLocation.indexOf("/comments/") !== -1) //Ignore if inside the thread
+        return;
 
-                                                if (!result[itemSubReddit])
-                                                    result[itemSubReddit] = [];
+    console.time("Duration");
+    working = true;
 
-                                                if (result[itemSubReddit].indexOf(id) === -1) {
-                                                    if (hrefs.indexOf(href) === -1 ) {
-                                                        if (codes.length < result["linkCount"]) {
-                                                            result[itemSubReddit].push(id);
-                                                            codes.push({
-                                                                id: id,
-                                                                href: href,
-                                                                itemSubReddit: itemSubReddit
-                                                            });
-                                                            ths.parent().parent().remove();
-                                                        } else {
-                                                            //ignore
-                                                        }
-                                                    } else {
-                                                        ths.parent().parent().remove();
-                                                    }
-                                                } else {
-                                                    ths.parent().parent().remove();
-                                                }
-                                            } else {
-                                                //ignore
-                                            }
-                                        } else {
-                                            ths.parent().parent().remove();
-                                        }
-                                    } else {
-                                        //ignore
-                                    }
-                                } else {
-                                    //ignore
-                                }
-                            });
-                        });
+    $("body").prepend("<div id=\"reddit-no-repeat-loading\">" +
+        "<img class=\"reddit-loading\" src=\"http://mehmetbuber.com/loading.gif\">" +
+        "<p>Loading new threads, please wait...</p>" +
+        "</div>");
 
-                        if (codes.length > result["linkCount"] - 1)
-                            finalize(result);
-                        else {
-                            window.scrollTo(0, document.body.scrollHeight);
-                        }
-                    }, 200);
+    chrome.storage.local.get(function (result) {
+        if (!result["linkCount"])
+            result["linkCount"] = 5;
+
+        interval = setInterval(function () {
+            $(window).scrollTop(0);
+
+            $(".scrollerItem").each(function () {
+                ths = $(this);
+                href = $(this).find("h2").parent().attr("href");
+                if (!href) {
+                    ths.parent().parent().remove();
+                    hiddenAds++;
+                    return;
+                }
+
+                itemSubReddit = getItemSubReddit(href);
+                if (!itemSubReddit)
+                    return;
+
+                id = getId(href);
+                if (!id)
+                    return;
+
+                if (href.indexOf("/comments/") === -1)
+                    return;
+
+                if (href.indexOf("?instanceId=") !== -1) {
+                    ths.parent().parent().remove();
+                    hiddenAds++;
+                    return;
+                }
+
+                if (!result[itemSubReddit])
+                    result[itemSubReddit] = [];
+
+                if (result[itemSubReddit].indexOf(id) !== -1) {
+                    ths.parent().parent().remove();
+                    hiddenThread++;
+                    return;
+                }
+
+                if (codes.length >= result["linkCount"])
+                    return;
+
+                result[itemSubReddit].push(id);
+                codes.push({
+                    id: id,
+                    href: href,
+                    itemSubReddit: itemSubReddit
                 });
+                ths.parent().parent().remove();
+            });
 
+            if (codes.length < result["linkCount"])
+                window.scrollTo(0, document.body.scrollHeight);
+            else {
+                clearInterval(interval);
+
+                for (i = 0; i < codes.length; i++) {
+                    window.open("https://www.reddit.com" + codes[i].href, "_blank");
+                }
+
+                chrome.storage.local.set(result, function () {
+                    $("#reddit-no-repeat-loading").remove();
+                    codes = [];
+                    working = false;
+                    document.documentElement.scrollTop = 0;
+
+                    console.timeEnd("Duration");
+                    console.log("%c" + hiddenAds + " ads.", 'font-weight: 600; color:#1a73e8');
+                    console.log("%c" + hiddenThread + " old threads.", 'font-weight: 600; color:#1a73e8');
+
+                    hiddenAds = 0;
+                    hiddenThread = 0;
+                });
             }
-        }
-    }
+        }, 200);
+    });
 };
 
 function getId(hrf) {
@@ -105,24 +132,4 @@ function getItemSubReddit(hrf) {
     catch (err) {
         return "";
     }
-}
-
-function getUrls(callback) {
-    chrome.storage.local.get([subReddit], function (result) {
-        callback(result);
-    });
-}
-
-function finalize(val) {
-    document.documentElement.scrollTop = 0;
-    clearInterval(interval);
-
-    for (i = 0; i < codes.length; i++) {
-        window.open("https://www.reddit.com" + codes[i].href, "_blank");
-    }
-
-    chrome.storage.local.set(val);
-    codes = [];
-    $("#reddit-no-repeat-loading").remove();
-    working = false;
 }
