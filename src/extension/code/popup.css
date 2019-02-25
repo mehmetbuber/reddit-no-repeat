@@ -55,7 +55,8 @@ body {
 
 .subReddit {
     margin: 2px;
-    display: inline-block
+    display: inline-block;
+    font-size: 12px;
 }
 
 .key-label {

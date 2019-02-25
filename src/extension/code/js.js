@@ -11,48 +11,36 @@ var hiddenAds = 0;
 var working = false;
 var triggered = false;
 
-function toggleControls(video) {
-    if (video.hasAttribute("controls")) {
-        video.removeAttribute("controls")
-    } else {
-        video.setAttribute("controls", "controls")
-    }
-}
-
 $(document).ready(function () {
     pageLocation = window.location.href;
 
     if (pageLocation.indexOf("0imgur") !== -1) //Ignore if inside the thread
     {
-        $('.yatay').each(function () {
+        $(".yatay").each(function () {
             $(this).remove();
         });
 
-        $('.dikey').each(function () {
+        $(".dikey").each(function () {
             $(this).remove();
         });
 
-        $('.icerik').each(function () {
+        $(".icerik").each(function () {
             $(this).remove();
         });
 
-        $('iframe').each(function () {
+        $("iframe").each(function () {
             $(this).remove();
         });
 
-        var video = $('video').get(0);
+        var video = $("video").get(0);
         toggleControls(video);
     }
     else if (pageLocation.indexOf("/comments/") !== -1) {
-        $('h2').parent().parent().parent().find('a').each(function () {
-            var parent = $(this).parent().parent();
+        $("h2").parent().parent().parent().find("a").each(function () {
             var href = $(this).attr("href");
 
             if (href.indexOf("imgur") !== -1) {
                 var newHref = href.replace("imgur", "0imgur");
-                console.log(newHref);
-                newHref = chrome.extension.getURL(newHref);
-                console.log(newHref);
                 window.open(newHref, "_blank");
             }
         });
@@ -153,8 +141,8 @@ document.onkeyup = function (e) {
                     document.documentElement.scrollTop = 0;
 
                     console.timeEnd("Duration");
-                    console.log("%c" + hiddenAds + " ads.", 'font-weight: 600; color:#1a73e8');
-                    console.log("%c" + hiddenThread + " old threads.", 'font-weight: 600; color:#1a73e8');
+                    console.log("%c" + hiddenAds + " ads.", "font-weight: 600; color:#1a73e8");
+                    console.log("%c" + hiddenThread + " old threads.", "font-weight: 600; color:#1a73e8");
 
                     hiddenAds = 0;
                     hiddenThread = 0;
@@ -179,5 +167,13 @@ function getItemSubReddit(hrf) {
     }
     catch (err) {
         return "";
+    }
+}
+
+function toggleControls(video) {
+    if (video.hasAttribute("controls")) {
+        video.removeAttribute("controls");
+    } else {
+        video.setAttribute("controls", "controls");
     }
 }
