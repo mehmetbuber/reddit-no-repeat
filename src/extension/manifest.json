@@ -6,29 +6,27 @@
   "description": "Loads new threads from reddit until 5 links found and removes previously opened links.",
   "homepage_url": "https://www.mehmetbuber.com/",
   "icons": {
-    "16": "images/icon16.png",
-    "48": "images/icon48.png",
-    "128": "images/icon128.png"
+    "16": "img/icon16.png",
+    "48": "img/icon48.png",
+    "128": "img/icon128.png"
   },
   "content_scripts": [
     {
       "matches": [ "http://*/*", "https://*/*" ],
-      "js": [ "resources/jquery.min.js", "code/js.js" ],
-      "css": [ "code/css.css" ]
+      "js": [ "resources/jquery.min.js", "js/inject.js" ],
+      "css": [ "css/inject.css" ]
     }
   ],
   "browser_action": {
-    "default_title": "Save this page for later.",
-    "default_icon": "images/icon16.png",
-    "default_popup": "code/popup.html"
+    "default_title": "Reddit No-Repeat.",
+    "default_icon": "img/icon16.png",
+    "default_popup": "popup.html"
   },
   "permissions": [
     "storage",
     "unlimitedStorage"
   ],
   "web_accessible_resources": [
-    "resources/*",
-    "images/*.png",
-    "images/*.gifv"
+    "resources/*"
   ]
 }

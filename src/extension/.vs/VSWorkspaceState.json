@@ -1,10 +1,9 @@
 {
   "ExpandedNodes": [
     "",
-    "\\code",
-    "\\images",
-    "\\resources"
+    "\\css",
+    "\\js"
   ],
-  "SelectedNode": "\\code\\js.js",
+  "SelectedNode": "\\js\\inject.js",
   "PreviewInSolutionExplorer": false
 }

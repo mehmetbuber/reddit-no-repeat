@@ -5,7 +5,7 @@ var i = 0;
 var pageLocation = "";
 var href = "";
 var id = "";
-var itemSubReddit = "";
+var itemSubreddit = "";
 var hiddenThread = 0;
 var hiddenAds = 0;
 var working = false;
@@ -34,15 +34,26 @@ $(document).ready(function () {
 
         var video = $("video").get(0);
         toggleControls(video);
+
     }
     else if (pageLocation.indexOf("/comments/") !== -1) {
-        $("h2").parent().parent().parent().find("a").each(function () {
-            var href = $(this).attr("href");
 
-            if (href.indexOf("imgur") !== -1) {
-                var newHref = href.replace("imgur", "0imgur");
-                window.open(newHref, "_blank");
-            }
+        chrome.storage.local.get(function (result) {
+
+            console.log("1");
+            if (result["imgurProxy"] !== true)
+                return;
+
+            console.log("2");
+
+            $("h2").parent().parent().parent().find("a").each(function () {
+                var href = $(this).attr("href");
+
+                if (href.indexOf("imgur") !== -1) {
+                    var newHref = href.replace("imgur", "0imgur");
+                    window.open(newHref, "_blank");
+                }
+            });
         });
     }
 });
@@ -67,7 +78,7 @@ document.onkeyup = function (e) {
     working = true;
 
     $("body").prepend("<div id=\"reddit-no-repeat-loading\">" +
-        "<img class=\"reddit-loading\" src=\"http://mehmetbuber.com/loading.gif\">" +
+        "<img class=\"reddit-loading\" src=\"https://i.0imgur.com/uR1TrP8.gif\">" +
         "<p>Loading new threads, please wait...</p>" +
         "</div>");
 
@@ -87,8 +98,8 @@ document.onkeyup = function (e) {
                     return;
                 }
 
-                itemSubReddit = getItemSubReddit(href);
-                if (!itemSubReddit)
+                itemSubreddit = getItemSubreddit(href);
+                if (!itemSubreddit)
                     return;
 
                 id = getId(href);
@@ -104,10 +115,10 @@ document.onkeyup = function (e) {
                     return;
                 }
 
-                if (!result[itemSubReddit])
-                    result[itemSubReddit] = [];
+                if (!result[itemSubreddit])
+                    result[itemSubreddit] = [];
 
-                if (result[itemSubReddit].indexOf(id) !== -1) {
+                if (result[itemSubreddit].indexOf(id) !== -1) {
                     ths.parent().parent().remove();
                     hiddenThread++;
                     return;
@@ -116,11 +127,11 @@ document.onkeyup = function (e) {
                 if (codes.length >= result["linkCount"])
                     return;
 
-                result[itemSubReddit].push(id);
+                result[itemSubreddit].push(id);
                 codes.push({
                     id: id,
                     href: href,
-                    itemSubReddit: itemSubReddit
+                    itemSubreddit: itemSubreddit
                 });
                 ths.parent().parent().remove();
             });
@@ -161,7 +172,7 @@ function getId(hrf) {
     }
 }
 
-function getItemSubReddit(hrf) {
+function getItemSubreddit(hrf) {
     try {
         return hrf.split("/")[2];
     }
