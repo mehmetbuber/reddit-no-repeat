@@ -171,9 +171,11 @@ function getItemSubReddit(hrf) {
 }
 
 function toggleControls(video) {
-    if (video.hasAttribute("controls")) {
-        video.removeAttribute("controls");
-    } else {
-        video.setAttribute("controls", "controls");
+    if (video) {
+        if (video.hasAttribute("controls")) {
+            video.removeAttribute("controls");
+        } else {
+            video.setAttribute("controls", "controls");
+        }
     }
 }

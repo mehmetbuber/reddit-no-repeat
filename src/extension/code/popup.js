@@ -34,11 +34,11 @@ $(document).ready(function () {
             if (keys[i] !== "linkCount") {
                 $("#threads").append('<div data-subReddit="' + keys[i] + '" class="subReddit">' +
                     '<i class="fa fa-trash remove-button"></i>' +
-                    '<a target="blank" href="https://www.reddit.com/r/' + keys[i] + '/top/?t=all">' +
+                    '<a class="reddit-link" target="blank" href="https://www.reddit.com/r/' + keys[i] + '/top/?t=all">' +
                     '<span class="key-label">' + keys[i] + "</span>: " + result[keys[i]].length  +
                     "</a>" +
                     "</div>");
-            };
+            }
         }
     });
 });
