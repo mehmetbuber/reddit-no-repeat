@@ -26,5 +26,9 @@
     "storage",
     "unlimitedStorage"
   ],
-  "web_accessible_resources": [ "resources/*" ]
+  "web_accessible_resources": [
+    "resources/*",
+    "images/*.png",
+    "images/*.gifv"
+  ]
 }

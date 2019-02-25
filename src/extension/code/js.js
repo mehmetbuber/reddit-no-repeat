@@ -11,11 +11,59 @@ var hiddenAds = 0;
 var working = false;
 var triggered = false;
 
+function toggleControls(video) {
+    if (video.hasAttribute("controls")) {
+        video.removeAttribute("controls")
+    } else {
+        video.setAttribute("controls", "controls")
+    }
+}
+
+$(document).ready(function () {
+    pageLocation = window.location.href;
+
+    if (pageLocation.indexOf("0imgur") !== -1) //Ignore if inside the thread
+    {
+        $('.yatay').each(function () {
+            $(this).remove();
+        });
+
+        $('.dikey').each(function () {
+            $(this).remove();
+        });
+
+        $('.icerik').each(function () {
+            $(this).remove();
+        });
+
+        $('iframe').each(function () {
+            $(this).remove();
+        });
+
+        var video = $('video').get(0);
+        toggleControls(video);
+    }
+    else if (pageLocation.indexOf("/comments/") !== -1) {
+        $('h2').parent().parent().parent().find('a').each(function () {
+            var parent = $(this).parent().parent();
+            var href = $(this).attr("href");
+
+            if (href.indexOf("imgur") !== -1) {
+                var newHref = href.replace("imgur", "0imgur");
+                console.log(newHref);
+                newHref = chrome.extension.getURL(newHref);
+                console.log(newHref);
+                window.open(newHref, "_blank");
+            }
+        });
+    }
+});
+
 document.onkeyup = function (e) {
     pageLocation = window.location.href;
     triggered = e.ctrlKey && e.shiftKey && e.which === 32;
 
-    if (pageLocation.indexOf("https://www.reddit.com/") !== -1) //Only on reddit
+    if (pageLocation.indexOf("https://www.reddit.com/") === -1) //Only on reddit
         return;
 
     if (!triggered) //Ignore event if not triggered
@@ -23,7 +71,7 @@ document.onkeyup = function (e) {
 
     if (working) //Ignore trigger if working
         return;
-    
+
     if (pageLocation.indexOf("/comments/") !== -1) //Ignore if inside the thread
         return;
 
