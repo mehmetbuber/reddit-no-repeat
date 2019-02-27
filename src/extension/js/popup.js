@@ -34,7 +34,7 @@ $(document).ready(function () {
         $("#imgur").prop('checked', result["imgurProxy"] === true);
 
         for (var i = 0; i < keys.length; i++) {
-            if (keys[i] !== "linkCount") {
+            if (keys[i] !== "linkCount" && keys[i] !== "imgurProxy") {
                 $("#threads").append('<div data-subreddit="' + keys[i] + '" class="subreddit">' +
                     '<i class="fa fa-trash remove-button"></i>' +
                     '<a class="reddit-link" target="blank" href="https://www.reddit.com/r/' + keys[i] + '/top/?t=all">' +
