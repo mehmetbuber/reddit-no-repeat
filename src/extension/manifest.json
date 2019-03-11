@@ -1,5 +1,5 @@
 {
-  "name": "Reddit No-Repeat",
+  "name": "Path Note",
   "version": "1.0",
   "author": "Mehmet Buber",
   "manifest_version": 2,
@@ -13,7 +13,7 @@
   "content_scripts": [
     {
       "matches": [ "http://*/*", "https://*/*" ],
-      "js": [ "resources/jquery.min.js", "js/inject.js" ],
+      "js": [ "resources/jquery.min.js", "resources/js/jquery-ui.min.js", "js/inject.js" ],
       "css": [ "css/inject.css" ]
     }
   ],
