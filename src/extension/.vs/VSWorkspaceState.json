@@ -2,8 +2,11 @@
   "ExpandedNodes": [
     "",
     "\\css",
-    "\\js"
+    "\\js",
+    "\\resources",
+    "\\resources\\css",
+    "\\resources\\js"
   ],
-  "SelectedNode": "\\css\\inject.css",
+  "SelectedNode": "\\js\\inject.js",
   "PreviewInSolutionExplorer": false
 }

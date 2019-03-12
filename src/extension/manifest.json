@@ -14,7 +14,7 @@
     {
       "matches": [ "http://*/*", "https://*/*" ],
       "js": [ "resources/jquery.min.js", "resources/js/jquery-ui.min.js", "js/inject.js" ],
-      "css": [ "css/inject.css" ]
+      "css": [ "css/inject.css", "resources/css/font-awesome.min.css" ]
     }
   ],
   "browser_action": {
