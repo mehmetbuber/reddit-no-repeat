@@ -13,8 +13,8 @@
   "content_scripts": [
     {
       "matches": [ "http://*/*", "https://*/*" ],
-      "js": [ "resources/jquery.min.js", "resources/js/jquery-ui.min.js", "js/inject.js" ],
-      "css": [ "css/inject.css", "resources/css/font-awesome.min.css" ]
+      "js": [ "resources/js/jquery.min.js", "resources/js/jquery-ui.min.js", "js/inject.js" ],
+      "css": [ "resources/css/font-awesome.min.css", "resources/css/jquery-ui.min.css", "css/inject.css" ]
     }
   ],
   "browser_action": {
